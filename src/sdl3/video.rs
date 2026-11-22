@@ -967,6 +967,18 @@ impl Display {
         }
     }
 
+    #[doc(alias = "SDL_GetCurrentDisplayMode")]
+    pub fn get_current_display_mode(&self) -> Result<DisplayMode, Error> {
+        unsafe {
+            // returns a pointer to the mode, or NULL on failyre
+            let mode_raw = sys::video::SDL_GetCurrentDisplayMode(self.id);
+            if mode_raw.is_null() {
+                return Err(get_error());
+            }
+            Ok(DisplayMode::from_ll(&*mode_raw))
+        }
+    }
+
     #[doc(alias = "SDL_GetClosestFullscreenDisplayMode")]
     pub fn get_closest_display_mode(
         &self,
